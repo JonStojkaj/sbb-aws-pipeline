@@ -1,0 +1,40 @@
+name: Deploy to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install Dependencies and Zip
+      run: |
+        mkdir lambda_build
+        pip install "pg8000>=1.31,<2" -t lambda_build
+        cp main.py lambda_build/
+        (cd lambda_build && zip -r ../lambda_package.zip .)
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-north-1
+
+    - name: Deploy to Lambda
+      run: |
+        aws lambda update-function-code \
+          --function-name sbb-pipeline-etl \
+          --zip-file fileb://lambda_package.zip
