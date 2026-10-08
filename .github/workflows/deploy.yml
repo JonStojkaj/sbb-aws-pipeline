@@ -36,5 +36,5 @@ jobs:
     - name: Deploy to Lambda
       run: |
         aws lambda update-function-code \
-          --function-name sbb-pipeline-etl \
+          --function-name sbb-extraction-pipeline \
           --zip-file fileb://lambda_package.zip

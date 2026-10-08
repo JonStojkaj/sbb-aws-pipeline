@@ -46,7 +46,7 @@ resource "aws_iam_role_policy" "lambda_ssm" {
 }
 
 resource "aws_lambda_function" "sbb_etl" {
-  function_name = "sbb-pipeline-etl"
+  function_name = "sbb-extraction-pipeline"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "main.lambda_handler"
   runtime       = "python3.12"

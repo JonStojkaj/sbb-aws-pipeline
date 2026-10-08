@@ -89,3 +89,21 @@ python setup_db.py
 Pushes auf `main` starten den Workflow in
 `.github/workflows/deploy.yml`. Dafür müssen im GitHub-Repository die Actions
 Secrets `AWS_ACCESS_KEY_ID` und `AWS_SECRET_ACCESS_KEY` hinterlegt sein.
+Die Lambda-Funktion muss im selben AWS-Konto und in der Region `eu-north-1`
+existieren. Ihr Name ist `sbb-extraction-pipeline`.
+
+### Region und Funktionsname in AWS prüfen
+
+1. Öffne die AWS-Konsole und wähle oben rechts die Region aus.
+2. Öffne **Services** → **Lambda**.
+3. Suche nach `sbb-extraction-pipeline`.
+4. Wenn die Funktion nicht erscheint, wähle oben rechts nacheinander die
+   Regionen aus, in denen du sie angelegt haben könntest.
+5. Öffne die Funktion. Die aktuell ausgewählte Region steht weiterhin oben
+   rechts in der AWS-Konsole. Diese Region muss im Workflow bei `aws-region`
+   und in Terraform übereinstimmen.
+
+Der aktuelle Workflow und die Terraform-Konfiguration verwenden `eu-north-1`
+(Stockholm). Wenn die Funktion in einer anderen Region liegt, muss
+`aws-region` in `.github/workflows/deploy.yml` und `region` in
+`terraform/main.tf` auf denselben Wert geändert werden.
